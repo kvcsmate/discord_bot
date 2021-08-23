@@ -26,7 +26,7 @@ class MicroBot:
 
     async def EventStart (self):
         winner = random.choice(tuple(self.players))
-        self.players = {}
+        self.players = set ()
         await self.WriteToChannel('The winner is: ' + winner)
 
     async def HandleMessage (self):

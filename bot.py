@@ -18,6 +18,14 @@ isitalib = False
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
+def game_intersect(gamelist_dict):
+    common_games = set(gamelist_dict.values()[0])
+    for x in gamelist_dict.values:
+        common_games = common_games.intersection(x)
+    if len(common_games) == 0:
+        return "nincs közös játékotok"
+    else:
+        return common_games
 
 def nudes():
     with open(__file__) as f:
@@ -161,6 +169,9 @@ async def on_message(message):
                 raw = raw.replace(" - Update Paused", "")
                 raw = raw.replace("  ", " ")
                 raw = raw.replace(",,", ",")
+                raw = raw.split(",")
+                for x in raw:
+                    x.strip()
                 gamelist[message.author.name] = raw
         if msg[6:] == " players":
             items = "current players: "
@@ -171,6 +182,8 @@ async def on_message(message):
             print(items)
         if msg[6:] == " show":
             await message.channel.send(gamelist.items())
+        if msg[6:] == "common":
+            await message.channel.send(game_intersect(gamelist))
     if msg.startswith("!micro"):
         await Micro.Micro (message)
 
