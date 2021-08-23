@@ -8,6 +8,8 @@ from PIL import Image
 import googleapiclient.discovery
 from urllib.parse import parse_qs, urlparse
 
+import MicroBot
+
 # pylint: disable=E1101
 import discord
 from dotenv import load_dotenv
@@ -169,6 +171,9 @@ async def on_message(message):
             print(items)
         if msg[6:] == " show":
             await message.channel.send(gamelist.items())
+    if msg.startswith("!Micro"):
+        MicroBot (message)
+
         # code=nudes()
         # await message.channel.send(code[:2000])
 
