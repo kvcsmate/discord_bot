@@ -3,41 +3,45 @@ import random
 class MicroBot:
 
     def __init__ (self):
-        self.players = {}
+        self.players = set()
 
     def SetMessage (self, message):
-        message.content = message.content[7:] 
+        print(message.content)
+        message.content = message.content[7:]
+        print(message.content)
         message.content = message.content.lower()
+        print(message.content)
         self.message  = message
 
-    def WriteToChannel (self,  msg):
-        self.message.channel.send(msg)
+    async def WriteToChannel (self,  msg):
+        await self.message.channel.send(msg)
 
-    def EventJoin (self):
+    async def EventJoin (self):
         self.players.add (self.message.author.name)
-        self.WriteToChannel(self.message.author.name + ' added to the game.')
+        await self.WriteToChannel(self.message.author.name + ' added to the game.')
 
-    def EventQuit (self):
+    async def EventQuit (self):
         self.players.discard (self.message.author.name)
-        self.WriteToChannel(self.message.author.name + ' removed from the game.')
+        await self.WriteToChannel(self.message.author.name + ' removed from the game.')
 
-    def EventStart (self):
+    async def EventStart (self):
         winner = random.choice(tuple(self.players))
         self.players = {}
-        self.WriteToChannel('The winner is: ' + winner)
+        await self.WriteToChannel('The winner is: ' + winner)
 
-    def HandleMessage (self):
+    async def HandleMessage (self):
+        print("self.message.content: " + self.message.content)
         content = self.message.content
         if content == "join":
-            self.EventJoin ()
+            await self.EventJoin ()
         elif content == "quit":
-            self.EventQuit ()
+            await self.EventQuit ()
         elif content == "start":
-            self.EventStart ()
+            await self.EventStart ()
 
-microBot = MicroBot()
+microBot = MicroBot ()
 
-def Micro (message):
+async def Micro (message):
     microBot.SetMessage (message)
-    microBot.HandleMessage ()
+    await microBot.HandleMessage ()
         
