@@ -19,8 +19,9 @@ isitalib = False
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 def game_intersect(gamelist_dict):
-    common_games = set(gamelist_dict.values()[0])
-    for x in gamelist_dict.values:
+    print(gamelist_dict.values())
+    common_games = set(list(gamelist_dict.values())[0])
+    for x in gamelist_dict.values():
         common_games = common_games.intersection(x)
     if len(common_games) == 0:
         return "nincs közös játékotok"
@@ -42,6 +43,7 @@ def textfromimage(image_path):
         gray = cv2.bitwise_not(gray)
     pytesseract.tesseract_cmd = path_to_tesseract
     text = pytesseract.image_to_string(gray)
+    os.remove(image_path)
     return(text[:-1])
 def youtubelinkfromlist():
 
@@ -169,7 +171,7 @@ async def on_message(message):
                 raw = raw.replace(" - Update Paused", "")
                 raw = raw.replace("  ", " ")
                 raw = raw.replace(",,", ",")
-                raw = raw.split(",")
+                raw = set(raw.split(","))
                 for x in raw:
                     x.strip()
                 gamelist[message.author.name] = raw
@@ -182,7 +184,7 @@ async def on_message(message):
             print(items)
         if msg[6:] == " show":
             await message.channel.send(gamelist.items())
-        if msg[6:] == "common":
+        if msg[6:] == " common":
             await message.channel.send(game_intersect(gamelist))
     if msg.startswith("!micro"):
         await Micro.Micro (message)
